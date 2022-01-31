@@ -4,10 +4,12 @@ const path = require("path");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const port = process.env.PORT || 5000;
+const studentRoutes = require("./routes/students");
 
 const app = express();
 app.use(bodyParser.json());
-mongoose.connect(process.env.DB_URI, {
+app.use(bodyParser.urlencoded({ extended: true }));
+mongoose.connect(process.env.DB_ADMIN_URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 });
@@ -18,6 +20,10 @@ db.once("open", function () {
 });
 mongoose.set("debug", true);
 
+app.get("/", (req, res) => {
+	res.send("hello, world");
+});
+app.use("/students", studentRoutes);
 app.listen(port, (err) => {
 	if (err) console.log(err);
 	else {
