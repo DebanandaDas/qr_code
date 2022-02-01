@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const Student = require("../models/student");
-
+// The following three statements are required to store images in cloudinary and get their respective links to store in db.
+const { storage } = require("../cloudinary");
+const multer = require("multer");
+const upload = multer({ storage });
+// This module contains controller functions implemented directly inside the router.
 // READ functionality
 router.get("/:id", async (req, res) => {
 	const id = req.params.id;
