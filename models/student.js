@@ -17,7 +17,7 @@ const StudentSchema = new Schema(
 		department: String,
 		address: String,
 		photo: ImageSchema,
-		// gradeCards: [ImageSchema],
+		gradeCards: [ImageSchema],
 	},
 	{
 		timestamps: true,
