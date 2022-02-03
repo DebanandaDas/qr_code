@@ -7,6 +7,7 @@ const ImageSchema = new Schema(
 	},
 	{
 		timestamps: true,
+		strict: true,
 	}
 );
 const StudentSchema = new Schema(
@@ -21,6 +22,7 @@ const StudentSchema = new Schema(
 	},
 	{
 		timestamps: true,
+		strict: true,
 	}
 );
 
