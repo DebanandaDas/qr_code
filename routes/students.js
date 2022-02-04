@@ -15,22 +15,35 @@ const {
 	changeGradeCards,
 	deleteStudent,
 } = require("../controllers/students");
+const { isAdmin } = require("../controllers/admin");
+// isAdmin middleware is to make sure that changes to db are done by admins themselves
+
 // READ functionality
 router.get("/:id", getStudent);
 
 // UPDATE functionality
-router.put("/:id", updateStudentTextparameters);
+router.put("/:id", isAdmin, updateStudentTextparameters);
 
 // CREATE functionality
-router.post("/", upload.none(), createNewStudent);
+router.post("/", isAdmin, upload.none(), createNewStudent);
 
 // PUT student photo (during creation & normal PUT)
-router.put("/putphoto/:id", upload.single("photo"), changeStudentPhoto);
+router.put(
+	"/putphoto/:id",
+	isAdmin,
+	upload.single("photo"),
+	changeStudentPhoto
+);
 
 // PUT Gradecards (during creation & normal PUT)
-router.put("/putgradecards/:id", upload.array("gradecards"), changeGradeCards);
+router.put(
+	"/putgradecards/:id",
+	isAdmin,
+	upload.array("gradecards"),
+	changeGradeCards
+);
 
 // DELETE functionality
-router.delete("/:id", deleteStudent);
+router.delete("/:id", isAdmin, deleteStudent);
 
 module.exports = router;

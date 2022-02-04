@@ -5,6 +5,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const port = process.env.PORT || 5000;
 const studentRoutes = require("./routes/students");
+const adminRoutes = require("./routes/admin");
 
 const app = express();
 app.use(bodyParser.json());
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 	res.send("hello, world");
 });
 app.use("/students", studentRoutes);
+app.use("/admin", adminRoutes);
 app.listen(port, (err) => {
 	if (err) console.log(err);
 	else {
