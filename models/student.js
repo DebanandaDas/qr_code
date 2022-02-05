@@ -12,6 +12,15 @@ const ImageSchema = new Schema(
 );
 const StudentSchema = new Schema(
 	{
+		username: {
+			type: String,
+			required: true,
+			unique: true,
+		},
+		password: {
+			type: String,
+			required: true,
+		},
 		name: String,
 		roll: String,
 		regNo: String,

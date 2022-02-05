@@ -14,6 +14,7 @@ const {
 	changeStudentPhoto,
 	changeGradeCards,
 	deleteStudent,
+	verifyStudent,
 } = require("../controllers/students");
 const { isAdmin } = require("../controllers/admin");
 // isAdmin middleware is to make sure that changes to db are done by admins themselves
@@ -45,5 +46,8 @@ router.put(
 
 // DELETE functionality
 router.delete("/:id", isAdmin, deleteStudent);
+
+// VERIFY (GET /students/verify/?username&password)
+router.get("/verify", verifyStudent);
 
 module.exports = router;

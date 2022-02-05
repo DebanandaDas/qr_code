@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const Admin = require("../models/admin");
 require("dotenv").config();
 
-module.exports.isAdmin = (req, res, next) => {
+module.exports.isAdmin = async (req, res, next) => {
 	// const authHeader = req.headers["authorization"];
 	// const token = authHeader && authHeader.split(' ')[1]
 	const token = req.body.token;
@@ -28,15 +28,16 @@ module.exports.isAdmin = (req, res, next) => {
 module.exports.register = async (req, res) => {
 	const { username, password } = req.body;
 	const admin = await Admin.find({ username });
-	if (admin) {
+	console.log(admin);
+	if (admin.username) {
 		return res.status(500).send({
 			success: false,
-			message: "an admin with the same password already exisits",
+			message: "an admin with the same username already exisits",
 		});
 	}
 
 	const admin1 = new Admin({ username, password });
-	await admin.save();
+	await admin1.save();
 	const token = jwt.sign({ id: admin1._id }, process.env.JWT_SECRET, {
 		expiresIn: 3600,
 	});

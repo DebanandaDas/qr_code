@@ -5,7 +5,12 @@ module.exports.getStudent = async (req, res) => {
 	const id = req.params.id;
 	const student = await Student.findById(id);
 	if (!student) {
-		return res.send(`Cannot find a student with the id${id}`).status(500);
+		return res
+			.send({
+				success: false,
+				message: `Cannot find a student with the id${id}`,
+			})
+			.status(500);
 	}
 	res.send({ success: true, student });
 };
@@ -91,4 +96,26 @@ module.exports.deleteStudent = async (req, res) => {
 	}
 	await Student.findByIdAndDelete(id);
 	res.send({ success: true });
+};
+
+module.exports.verifyStudent = async (req, res) => {
+	const { username, password } = req.query;
+	const student = await Student.find({ username });
+	if (!student) {
+		return res.status(500).send({
+			success: false,
+			message: "Invalid username",
+		});
+	} else if (student.password !== password) {
+		return res.status(500).send({
+			success: false,
+			message: "Invalid password",
+		});
+	}
+
+	res.status(200).send({
+		success: false,
+		student: student,
+		message: "Student verified",
+	});
 };

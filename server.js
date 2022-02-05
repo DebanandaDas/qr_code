@@ -24,7 +24,7 @@ mongoose.set("debug", true);
 app.get("/", (req, res) => {
 	res.send("hello, world");
 });
-app.use("/students", studentRoutes);
+app.use("/student", studentRoutes);
 app.use("/admin", adminRoutes);
 app.listen(port, (err) => {
 	if (err) console.log(err);
