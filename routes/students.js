@@ -6,7 +6,7 @@ const router = express.Router({ mergeParams: true });
 // links to store in db / delete in cloudinary.
 const { cloudinary, imageStorage } = require("../cloudinary");
 const multer = require("multer");
-const upload = multer({ imageStorage });
+const upload = multer({ storage: imageStorage });
 const {
 	getStudent,
 	updateStudentTextparameters,
@@ -26,7 +26,12 @@ router.get("/:id", getStudent);
 router.put("/:id", isAdmin, updateStudentTextparameters);
 
 // CREATE functionality
-router.post("/", isAdmin, upload.none(), createNewStudent);
+router.post(
+	"/",
+	isAdmin,
+	upload.fields([{ name: "photo" }, { name: "gradecards", maxCount: 8 }]),
+	createNewStudent
+);
 
 // PUT student photo (during creation & normal PUT)
 router.put(

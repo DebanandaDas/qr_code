@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const path = require("path");
 require("dotenv").config();
 const mongoose = require("mongoose");
@@ -10,6 +11,7 @@ const adminRoutes = require("./routes/admin");
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 mongoose.connect(process.env.DB_ADMIN_URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
@@ -24,7 +26,7 @@ mongoose.set("debug", true);
 app.get("/", (req, res) => {
 	res.send("hello, world");
 });
-app.use("/student", studentRoutes);
+app.use("/students", studentRoutes);
 app.use("/admin", adminRoutes);
 app.listen(port, (err) => {
 	if (err) console.log(err);

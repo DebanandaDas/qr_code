@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const ImageSchema = new Schema(
+const FileSchema = new Schema(
 	{
 		url: String,
 		filename: String,
@@ -26,8 +26,8 @@ const StudentSchema = new Schema(
 		regNo: String,
 		department: String,
 		address: String,
-		photo: ImageSchema,
-		gradeCards: [ImageSchema],
+		photo: FileSchema,
+		gradeCards: [FileSchema],
 	},
 	{
 		timestamps: true,
