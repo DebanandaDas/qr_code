@@ -1,6 +1,8 @@
 // this module contains all controller functions that are used to manipulate db/students' collection.
 const Student = require("../models/student");
 const { cloudinary } = require("../cloudinary");
+// QRcode generator
+const { generateQR } = require("../utils/qrcodes");
 
 module.exports.getStudent = async (req, res) => {
 	const id = req.params.id;
@@ -40,15 +42,27 @@ module.exports.createNewStudent = async (req, res) => {
 	const student = new Student({
 		...req.body.student,
 	});
-	console.log(req.files);
+	// console.log(req.files);
+	// Photo url collection
 	student.photo = {
 		url: req.files["photo"][0].path,
 		filename: req.files["photo"][0].filename,
 	};
+	// Gradecard url collection
 	const gradeCards = req.files["gradecards"].map((imgObj) => {
 		return { url: imgObj.path, filename: imgObj.filename };
 	});
 	student.gradeCards = gradeCards;
+
+	// QRcode image and url creation
+	const qrcode_img = await generateQR(
+		`http://localhost:5000/students/verify?username=${student.username}&password=${student.password}`
+	);
+	const qrcode_obj = await cloudinary.uploader.upload(qrcode_img, {
+		folder: "Students",
+	});
+	student.qrcode = { url: qrcode_obj.url, filename: qrcode_obj.public_id };
+
 	await student.save();
 	res.status(201).send({ success: true, id: student._id });
 };
@@ -103,8 +117,13 @@ module.exports.deleteStudent = async (req, res) => {
 	}
 	if (student.photo.filename) {
 		console.log(student.photo);
-		console.log(cloudinary.uploader);
 		cloudinary.uploader.destroy(student.photo.filename, function (result) {
+			console.log(result);
+		});
+	}
+	if (student.qrcode.filename) {
+		console.log(student.qrcode);
+		cloudinary.uploader.destroy(student.qrcode.filename, function (result) {
 			console.log(result);
 		});
 	}
@@ -121,7 +140,10 @@ module.exports.deleteStudent = async (req, res) => {
 
 module.exports.verifyStudent = async (req, res) => {
 	const { username, password } = req.query;
-	const student = await Student.find({ username });
+	console.log(req.query);
+	// const { username, password } = req.body;
+	const student = await Student.findOne({ username });
+	console.log(student);
 	if (!student) {
 		return res.status(500).send({
 			success: false,
@@ -135,7 +157,7 @@ module.exports.verifyStudent = async (req, res) => {
 	}
 
 	res.status(200).send({
-		success: false,
+		success: true,
 		id: student._id,
 		message: "Student verified",
 	});

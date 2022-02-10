@@ -28,6 +28,7 @@ const StudentSchema = new Schema(
 		address: String,
 		photo: FileSchema,
 		gradeCards: [FileSchema],
+		qrcode: FileSchema,
 	},
 	{
 		timestamps: true,

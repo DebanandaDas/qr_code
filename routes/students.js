@@ -17,6 +17,10 @@ const {
 	verifyStudent,
 } = require("../controllers/students");
 const { isAdmin } = require("../controllers/admin");
+
+// VERIFY (GET /students/verify?username&password)
+router.get("/verify", verifyStudent);
+
 // isAdmin middleware is to make sure that changes to db are done by admins themselves
 
 // READ functionality
@@ -51,8 +55,5 @@ router.put(
 
 // DELETE functionality
 router.delete("/:id", isAdmin, deleteStudent);
-
-// VERIFY (GET /students/verify/?username&password)
-router.get("/verify", verifyStudent);
 
 module.exports = router;
