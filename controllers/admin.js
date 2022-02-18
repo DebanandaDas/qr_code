@@ -2,29 +2,6 @@ const jwt = require("jsonwebtoken");
 const Admin = require("../models/admin");
 require("dotenv").config();
 
-module.exports.isAdmin = async (req, res, next) => {
-	// const authHeader = req.headers["authorization"];
-	// const token = authHeader && authHeader.split(' ')[1]
-	const token = req.signedCookies["authcookie"];
-
-	if (token == null) return res.sendStatus(401);
-
-	const { id } = jwt.verify(token, process.env.JWT_SECRET);
-	if (!id) {
-		return res
-			.status(500)
-			.send({ auth: false, message: "Invalid credentials" });
-	}
-	const admin = await Admin.findById(id);
-	if (!admin) {
-		return res
-			.status(500)
-			.send({ auth: false, message: "Invalid credentials" });
-	}
-
-	next();
-};
-
 module.exports.register = async (req, res) => {
 	const { username, password } = req.body;
 	const admin = await Admin.find({ username });
@@ -53,12 +30,12 @@ module.exports.login = async (req, res) => {
 	const adminArray = await Admin.find({ username });
 	if (adminArray.length === 0) {
 		return res
-			.status(500)
+			.status(400)
 			.send({ success: false, message: "Invalid username" });
 	}
 	const admin = adminArray[0];
 	if (admin.password !== password) {
-		return res.status(500).send({
+		return res.status(400).send({
 			success: false,
 			message: "Invalid password",
 		});

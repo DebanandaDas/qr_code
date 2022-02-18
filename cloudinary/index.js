@@ -24,4 +24,26 @@ const imageStorage = new CloudinaryStorage({
 // });
 // module.exports = { cloudinary, imageStorage, qrStorage };
 
-module.exports = { cloudinary, imageStorage };
+const uploadImage = async (imageInURI, folder) => {
+	return await cloudinary.uploader.upload(imageInURI, { folder });
+};
+
+const deleteImage = async (filename) => {
+	return await cloudinary.uploader.destroy(filename);
+};
+
+// Not working
+const deleteFolder = async () => {
+	cloudinary.delete_all_resources("Students/", function (error, result) {
+		console.log(result, error);
+		console.log("All files deleted");
+	});
+};
+
+module.exports = {
+	cloudinary,
+	imageStorage,
+	uploadImage,
+	deleteFolder,
+	deleteImage,
+};
