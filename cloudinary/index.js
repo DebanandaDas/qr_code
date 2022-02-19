@@ -11,7 +11,7 @@ const imageStorage = new CloudinaryStorage({
 	cloudinary,
 	params: {
 		folder: "Students",
-		allowedFormats: ["jpeg", "png", "jpg"],
+		allowedFormats: ["jpeg", "png", "jpg", "pdf"],
 	},
 });
 
