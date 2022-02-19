@@ -6,7 +6,7 @@ module.exports.studentValidator = (req, res, next) => {
 	const { error } = studentSchema.validate(req.body.student);
 	if (error) {
 		const msg = error.details.map((el) => el.message).join(",");
-		throw new ExpressError(msg, 400);
+		return res.status(400).send({ success: false, message: msg });
 	}
 	if (!req.files["photo"]) {
 		return res
@@ -17,7 +17,7 @@ module.exports.studentValidator = (req, res, next) => {
 		const { error1 } = fileSchema.validate(req.files["photo"][0]);
 		if (error1) {
 			const msg = error1.details.map((el) => el.message).join(",");
-			throw new ExpressError(msg, 400);
+			return res.status(400).send({ success: false, message: msg });
 		}
 	}
 	if (!req.files["gradecards"]) {
@@ -31,7 +31,7 @@ module.exports.studentValidator = (req, res, next) => {
 			const { error2 } = fileSchema.validate(imgObj);
 			if (error2) {
 				const msg = error2.details.map((el) => el.message).join(",");
-				throw new ExpressError(msg, 400);
+				return res.status(400).send({ success: false, message: msg });
 			}
 		});
 	}
