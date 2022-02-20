@@ -6,6 +6,7 @@ require("dotenv").config();
 const cors = require("cors");
 const corsOptions = {
 	origin: "*",
+	mehtods: ["GET", "PUT", "POST", "DELETE"],
 	allowedHeaders: ["Content-Type"],
 };
 const mongoose = require("mongoose");
