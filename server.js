@@ -7,7 +7,8 @@ const cors = require("cors");
 const corsOptions = {
 	origin: "*",
 	mehtods: ["GET", "PUT", "POST", "DELETE"],
-	allowedHeaders: ["Content-Type"],
+	allowedHeaders: ["Content-Type", "Authorization"],
+	credentials: true,
 };
 const mongoose = require("mongoose");
 const port = process.env.PORT || 5000;
