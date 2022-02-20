@@ -3,12 +3,18 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 require("dotenv").config();
+const cors = require("cors");
+const corsOptions = {
+	origin: "*",
+	allowedHeaders: ["Content-Type"],
+};
 const mongoose = require("mongoose");
 const port = process.env.PORT || 5000;
 const studentRoutes = require("./routes/students");
 const adminRoutes = require("./routes/admin");
 
 const app = express();
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
