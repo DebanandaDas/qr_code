@@ -99,7 +99,7 @@ module.exports.createNewStudent = async (req, res) => {
 
 	// QRcode image and url creation
 	const qrcode_img = await generateQR(
-		`http://localhost:3000/students/verify?username=${student.username}&password=${student.password}`
+		`http://localhost:3000/report?username=${student.username}&password=${student.password}`
 	);
 	const qrcode_obj = await uploadImage(qrcode_img, "Students/qrcodes");
 	student.qrcode = { url: qrcode_obj.url, filename: qrcode_obj.public_id };
