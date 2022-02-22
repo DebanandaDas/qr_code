@@ -72,7 +72,7 @@ module.exports.updateStudent = async (req, res) => {
 	// });
 	deleteImage(student.qrcode.filename);
 	const qrcode_img = await generateQR(
-		`http://localhost:5000/students/verify?username=${student.username}&password=${student.password}`
+		`http://localhost:3000/report?username=${student.username}&password=${student.password}`
 	);
 	const qrcode_obj = await uploadImage(qrcode_img, "Students/qrcodes");
 	student.qrcode = { url: qrcode_obj.url, filename: qrcode_obj.public_id };
