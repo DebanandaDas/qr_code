@@ -19,10 +19,11 @@ module.exports.getStudent = async (req, res) => {
 module.exports.getStudentByRegNo = async (req, res) => {
 	const { regNo } = req.params;
 	const student = await Student.findOne({ regNo });
+	console.log(student);
 	if (!student) {
 		return res.status(400).send({
 			success: false,
-			message: `Cannot find a student with the id ${id}`,
+			message: `Cannot find a student with the id ${regNo}`,
 		});
 	}
 	res.send({ success: true, student });
