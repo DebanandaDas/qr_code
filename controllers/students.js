@@ -16,6 +16,17 @@ module.exports.getStudent = async (req, res) => {
 	}
 	res.send({ success: true, student });
 };
+module.exports.getStudentByRegNo = async (req, res) => {
+	const { regNo } = req.params;
+	const student = await Student.findOne({ regNo });
+	if (!student) {
+		return res.status(400).send({
+			success: false,
+			message: `Cannot find a student with the id ${id}`,
+		});
+	}
+	res.send({ success: true, student });
+};
 
 module.exports.updateStudentTextparameters = async (req, res) => {
 	const id = req.params.id;

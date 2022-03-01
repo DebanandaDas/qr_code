@@ -18,6 +18,7 @@ const {
 	deleteStudent,
 	verifyStudent,
 	verifyStudentRegNo,
+	getStudentByRegNo,
 } = require("../controllers/students");
 // admin middleware
 const { isAdmin } = require("../middleware/admin");
@@ -41,6 +42,7 @@ router.get("/verify/regNo", catchAsync(verifyStudentRegNo));
 
 // READ functionality
 router.get("/:id", catchAsync(getStudent));
+router.get("/regNo/:regNo", catchAsync(getStudentByRegNo));
 
 // UPDATE functionality
 router.put(
