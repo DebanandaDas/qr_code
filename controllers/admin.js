@@ -40,12 +40,16 @@ module.exports.login = async (req, res) => {
 			message: "Invalid password",
 		});
 	}
-	const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
-		expiresIn: 3600,
-	});
+	// const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
+	// 	expiresIn: 3600,
+	// });
+	const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET);
+	// res.cookie("authcookie", token, {
+	// 	maxAge: new Date(Date.now() + 60 * 60 * 1000),
+	// 	signed: true,
+	// 	httpOnly: true,
+	// });
 	res.cookie("authcookie", token, {
-		maxAge: new Date(Date.now() + 60 * 60 * 1000),
-		signed: true,
 		httpOnly: true,
 	});
 	res.status(200).send({ success: true });
