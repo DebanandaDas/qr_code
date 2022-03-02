@@ -5,6 +5,9 @@ const { cloudinary, uploadImage, deleteImage } = require("../cloudinary");
 // QRcode generator
 const { generateQR } = require("../utils/qrcodes");
 
+// uuid
+const { v4: uuidv4 } = require("uuid");
+
 module.exports.getStudent = async (req, res) => {
 	const id = req.params.id;
 	const student = await Student.findById(id);
@@ -96,6 +99,7 @@ module.exports.updateStudent = async (req, res) => {
 module.exports.createNewStudent = async (req, res) => {
 	const student = new Student({
 		...req.body.student,
+		uniqueID: uuidv4(),
 	});
 	// console.log(req.files);
 	// Photo url collection
@@ -198,7 +202,7 @@ module.exports.verifyStudent = async (req, res) => {
 	console.log(req.query);
 	// const { username, password } = req.body;
 	const student = await Student.findOne({ username });
-	console.log(student);
+	// console.log(student);
 	if (!student) {
 		return res.status(500).send({
 			success: false,
@@ -223,7 +227,7 @@ module.exports.verifyStudentRegNo = async (req, res) => {
 	console.log(req.query);
 	// const { username, password } = req.body;
 	const student = await Student.findOne({ regNo });
-	console.log(student);
+	// console.log(student);
 	if (!student) {
 		return res.status(500).send({
 			success: false,
@@ -233,6 +237,33 @@ module.exports.verifyStudentRegNo = async (req, res) => {
 		return res.status(500).send({
 			success: false,
 			message: "Invalid password",
+		});
+	}
+
+	res.status(200).send({
+		success: true,
+		id: student._id,
+		message: "Student verified",
+	});
+};
+
+module.exports.verifyStudentByuuid = async (req, res) => {
+	const { regNo, uuid } = req.query;
+	// console.log(req.query);
+	// const { username, password } = req.body;
+	const student = await Student.findOne({ regNo });
+	// console.log(student);
+	if (!student) {
+		return res.status(500).send({
+			success: false,
+			message: "Invalid regNo",
+		});
+	}
+
+	if (student.uniqueID !== uuid) {
+		return res.status(500).send({
+			success: false,
+			message: "Invalid uuid",
 		});
 	}
 

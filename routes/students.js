@@ -19,6 +19,7 @@ const {
 	verifyStudent,
 	verifyStudentRegNo,
 	getStudentByRegNo,
+	verifyStudentByuuid,
 } = require("../controllers/students");
 // admin middleware
 const { isAdmin } = require("../middleware/admin");
@@ -37,6 +38,7 @@ const {
 // VERIFY (GET /students/verify?username&password)
 router.get("/verify", catchAsync(verifyStudent));
 router.get("/verify/regNo", catchAsync(verifyStudentRegNo));
+router.get("/verify/uuid", catchAsync(verifyStudentByuuid));
 
 // isAdmin middleware is to make sure that changes to db are done by admins themselves
 

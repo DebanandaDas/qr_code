@@ -21,6 +21,10 @@ const StudentSchema = new Schema(
 			type: String,
 			required: true,
 		},
+		uniqueID: {
+			type: String,
+			required: true,
+		},
 		name: String,
 		roll: String,
 		regNo: String,
