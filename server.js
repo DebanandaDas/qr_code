@@ -5,7 +5,7 @@ const path = require("path");
 require("dotenv").config();
 const cors = require("cors");
 const corsOptions = {
-	origin: "http://localhost:3000",
+	origin: "https://jolly-wiles-e5debb.netlify.app/",
 	mehtods: ["GET", "PUT", "POST", "DELETE"],
 	allowedHeaders: ["Content-Type", "Authorization"],
 	credentials: true,
