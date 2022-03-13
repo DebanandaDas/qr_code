@@ -97,29 +97,28 @@ module.exports.updateStudent = async (req, res) => {
 };
 
 module.exports.createNewStudent = async (req, res) => {
-	const {username, name, roll, regNo, department, address, password}= req.query;
 	const student = new Student({
-		username, name, roll, regNo, department, address, password,
+		...req.body.student,
 		uniqueID: uuidv4(),
 	});
-	 console.log(req.files);
+	// console.log(req.files);
 	// Photo url collection
-	 student.photo = {
+	student.photo = {
 		url: req.files["photo"][0].path,
 		filename: req.files["photo"][0].filename,
-	}; 
+	};
 	// Gradecard url collection
-	 /* const gradeCards = req.files["gradecards"].map((imgObj) => {
+	const gradeCards = req.files["gradecards"].map((imgObj) => {
 		return { url: imgObj.path, filename: imgObj.filename };
 	});
-	student.gradeCards = gradeCards;  */
+	student.gradeCards = gradeCards;
 
 	// QRcode image and url creation
-	 const qrcode_img = await generateQR(
+	const qrcode_img = await generateQR(
 		`http://localhost:3000/report?username=${student.username}&password=${student.password}`
 	);
 	const qrcode_obj = await uploadImage(qrcode_img, "Students/qrcodes");
-	student.qrcode = { url: qrcode_obj.url, filename: qrcode_obj.public_id }; 
+	student.qrcode = { url: qrcode_obj.url, filename: qrcode_obj.public_id };
 
 	await student.save();
 	res.status(201).send({ success: true, id: student._id });
