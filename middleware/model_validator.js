@@ -20,13 +20,13 @@ module.exports.studentValidator = (req, res, next) => {
 			return res.status(400).send({ success: false, message: msg });
 		}
 	}
-	if (!req.files["gradecards"]) {
+	/* if (!req.files["gradecards"]) {
 		return res.status(400).send({
 			success: false,
 			message: "Invalid media upload(gradecards)",
 		});
-	}
-	if (req.files["gradecards"].length > 0) {
+	} */
+	/* if (req.files["gradecards"].length > 0) {
 		const errorObj = req.files["gradecards"].forEach((imgObj) => {
 			const { error2 } = fileSchema.validate(imgObj);
 			if (error2) {
@@ -34,7 +34,7 @@ module.exports.studentValidator = (req, res, next) => {
 				return res.status(400).send({ success: false, message: msg });
 			}
 		});
-	}
+	} */
 	// console.log("Joi validator check passed");
 	next();
 };
