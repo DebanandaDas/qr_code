@@ -40,6 +40,6 @@ module.exports.idInDB = async (req, res, next) => {
 			message: "Student with given id does not exist.",
 		});
 	}
-	// console.log("ID in DB");
+	console.log("ID in DB");
 	next();
 };

@@ -38,3 +38,23 @@ module.exports.studentValidator = (req, res, next) => {
 	// console.log("Joi validator check passed");
 	next();
 };
+
+module.exports.studentValidatorTextParams = (req, res, next) => {
+	const { error } = studentSchema.validate(req.body.student);
+	if (error) {
+		const msg = error.details.map((el) => el.message).join(",");
+		return res.status(400).send({ success: false, message: msg });
+	}
+	next();
+};
+
+module.exports.fileValidator = (req, res, next) => {
+	const file = req.gradecard || req.photo;
+	const { error } = fileSchema.validate(file);
+	if (error) {
+		const msg = error.details.map((el) => el.message).join(",");
+		return res.status(400).send({ success: false, message: msg });
+	}
+	console.log("file validation successful!");
+	next();
+};

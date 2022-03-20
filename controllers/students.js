@@ -32,17 +32,6 @@ module.exports.getStudentByRegNo = async (req, res) => {
 	res.send({ success: true, student });
 };
 
-module.exports.updateStudentTextparameters = async (req, res) => {
-	const id = req.params.id;
-	console.log(req.params.id);
-	console.log(req.body);
-	const student = await Student.findByIdAndUpdate(id, {
-		...req.body.student,
-	});
-	await student.save();
-	res.send({ success: true });
-};
-
 module.exports.updateStudent = async (req, res) => {
 	const { id } = req.params;
 	const student = await Student.findByIdAndUpdate(id, {
@@ -122,50 +111,6 @@ module.exports.createNewStudent = async (req, res) => {
 
 	await student.save();
 	res.status(201).send({ success: true, id: student._id });
-};
-
-module.exports.changeStudentPhoto = async (req, res) => {
-	console.log(req.file);
-	const id = req.params.id;
-	const student = await Student.findById(id);
-	if (!student) {
-		return res.send(`Cannot find a student with the id${id}`).status(500);
-	}
-	if (student.photo) {
-		// cloudinary.uploader.destroy(student.photo.filename, function (result) {
-		// 	console.log(result);
-		// });
-		deleteImage(student.photo.filename);
-	}
-	student.photo = {
-		url: req.file.path,
-		filename: req.file.filename,
-	};
-	await student.save();
-	res.send({ success: true });
-};
-
-module.exports.changeGradeCards = async (req, res) => {
-	console.log(req.files);
-	const id = req.params.id;
-	const student = await Student.findById(id);
-	if (!student) {
-		return res.send(`Cannot find a student with the id${id}`).status(500);
-	}
-	if (student.gradeCards) {
-		student.gradeCards.forEach((element) => {
-			// cloudinary.uploader.destroy(element.filename, function (result) {
-			// 	console.log(result);
-			// });
-			deleteImage(element.filename);
-		});
-	}
-	const gradeCards = req.files.map((imgObj) => {
-		return { url: imgObj.path, filename: imgObj.filename };
-	});
-	student.gradeCards = gradeCards;
-	await student.save();
-	res.send({ success: true });
 };
 
 module.exports.deleteStudent = async (req, res) => {
@@ -272,4 +217,123 @@ module.exports.verifyStudentByuuid = async (req, res) => {
 		id: student._id,
 		message: "Student verified",
 	});
+};
+
+// these functions have the same functionalites present above, but student CRUD operations are made a little different.
+// POST
+module.exports.createNewStudentWithTextParams = async (req, res) => {
+	const student = new Student({
+		...req.body.student,
+		uniqueID: uuidv4(),
+	});
+
+	// QRcode image and url creation
+	const qrcode_img = await generateQR(
+		`http://localhost:3000/report?username=${student.username}&password=${student.password}`
+	);
+	const qrcode_obj = await uploadImage(qrcode_img, "Students/qrcodes");
+	student.qrcode = { url: qrcode_obj.url, filename: qrcode_obj.public_id };
+
+	await student.save();
+	res.status(201).send({ success: true, id: student._id });
+};
+
+module.exports.createNewStudentFromQueryTextParams = async (req, res) => {
+	const { username, name, roll, regNo, department, address, password } =
+		req.query;
+	const student = new Student({
+		username,
+		name,
+		roll,
+		regNo,
+		department,
+		address,
+		password,
+		uniqueID: uuidv4(),
+	});
+
+	// QRcode image and url creation
+	const qrcode_img = await generateQR(
+		`http://localhost:3000/report?username=${student.username}&password=${student.password}`
+	);
+	const qrcode_obj = await uploadImage(qrcode_img, "Students/qrcodes");
+	student.qrcode = { url: qrcode_obj.url, filename: qrcode_obj.public_id };
+
+	await student.save();
+	res.status(201).send({ success: true, id: student._id });
+};
+
+module.exports.changeStudentPhoto = async (req, res) => {
+	console.log(req.file);
+	const id = req.params.id;
+	const student = await Student.findById(id);
+	if (student.photo) {
+		// cloudinary.uploader.destroy(student.photo.filename, function (result) {
+		// 	console.log(result);
+		// });
+		deleteImage(student.photo.filename);
+	}
+	student.photo = {
+		url: req.file.path,
+		filename: req.file.filename,
+	};
+	await student.save();
+	res.send({ success: true });
+};
+
+module.exports.changeGradeCards = async (req, res) => {
+	// console.log(req.files);
+	const id = req.params.id;
+	const student = await Student.findById(id);
+	if (!student) {
+		return res.send(`Cannot find a student with the id${id}`).status(500);
+	}
+	if (student.gradeCards) {
+		student.gradeCards.forEach((element) => {
+			// cloudinary.uploader.destroy(element.filename, function (result) {
+			// 	console.log(result);
+			// });
+			deleteImage(element.filename);
+		});
+	}
+	const gradeCards = req.files.map((imgObj) => {
+		return { url: imgObj.path, filename: imgObj.filename };
+	});
+	student.gradeCards = gradeCards;
+	await student.save();
+	res.send({ success: true });
+};
+
+module.exports.changeGradeCard = async (req, res) => {
+	console.log(req.file);
+	const { id, semNo } = req.params;
+	const student = await Student.findById(id);
+	const sem = parseInt(semNo);
+	if (sem > 8 || sem < 1) {
+		deleteImage(req.file.filename);
+		return res.status(400).send({
+			success: false,
+			message: "Invalid sem Number",
+		});
+	}
+	if (student.gradeCards[sem - 1].filename) {
+		deleteImage(student.gradeCards[sem - 1].filename);
+	}
+	student.gradeCards[sem - 1] = {
+		url: req.file.path,
+		filename: req.file.filename,
+	};
+	await student.save();
+	res.send({ success: true });
+};
+
+module.exports.updateStudentTextparameters = async (req, res) => {
+	const id = req.params.id;
+	// console.log(req.params.id);
+	// console.log(req.body);
+	const student = await Student.findByIdAndUpdate(id, {
+		...req.body.student,
+	});
+	await student.save();
+	res.send({ success: true });
 };

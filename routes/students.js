@@ -20,12 +20,19 @@ const {
 	verifyStudentRegNo,
 	getStudentByRegNo,
 	verifyStudentByuuid,
+	changeGradeCard,
+	createNewStudentWithTextParams,
+	createNewStudentFromQueryTextParams,
 } = require("../controllers/students");
 // admin middleware
 const { isAdmin } = require("../middleware/admin");
 
 // Joi schema validator middleware
-const { studentValidator } = require("../middleware/model_validator");
+const {
+	studentValidator,
+	studentValidatorTextParams,
+	fileValidator,
+} = require("../middleware/model_validator");
 // catchAsync error handling middleware
 const catchAsync = require("../utils/catchAsync");
 // username/id check middlewares
@@ -47,12 +54,12 @@ router.get("/:id", catchAsync(getStudent));
 router.get("/regNo/:regNo", catchAsync(getStudentByRegNo));
 
 // UPDATE functionality
-router.put(
-	"/updateText/:id",
-	catchAsync(isAdmin),
-	studentValidator,
-	catchAsync(updateStudentTextparameters)
-);
+// router.put(
+// 	"/updateText/:id",
+// 	catchAsync(isAdmin),
+// 	studentValidator,
+// 	catchAsync(updateStudentTextparameters)
+// );
 router.put(
 	"/:id",
 	catchAsync(isAdmin),
@@ -71,11 +78,37 @@ router.post(
 	catchAsync(createNewStudent)
 );
 
+router.post(
+	"/createWithTextParams",
+	catchAsync(isAdmin),
+	upload.none(),
+	catchAsync(usernameNotInDB),
+	studentValidatorTextParams,
+	catchAsync(createNewStudentWithTextParams)
+);
+
+router.post(
+	"/createFromQueryTextParams",
+	catchAsync(isAdmin),
+	catchAsync(createNewStudentFromQueryTextParams)
+);
+
+router.put(
+	"/putTextParams",
+	catchAsync(isAdmin),
+	upload.none(),
+	catchAsync(usernameNotInDB),
+	studentValidatorTextParams,
+	catchAsync(updateStudentTextparameters)
+);
+
 // PUT student photo (during creation & normal PUT)
 router.put(
 	"/putphoto/:id",
 	catchAsync(isAdmin),
 	upload.single("photo"),
+	fileValidator,
+	catchAsync(idInDB),
 	catchAsync(changeStudentPhoto)
 );
 
@@ -84,7 +117,18 @@ router.put(
 	"/putgradecards/:id",
 	catchAsync(isAdmin),
 	upload.array("gradecards"),
+	catchAsync(idInDB),
 	catchAsync(changeGradeCards)
+);
+
+// PUT Gradecard (during creation & normal PUT)
+router.put(
+	"/putgradecard/:id/:semNo",
+	catchAsync(isAdmin),
+	upload.single("gradecard"),
+	fileValidator,
+	catchAsync(idInDB),
+	catchAsync(changeGradeCard)
 );
 
 // DELETE functionality
