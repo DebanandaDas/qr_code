@@ -22,6 +22,7 @@ const {
 	verifyStudentByuuid,
 	changeGradeCard,
 	createNewStudentWithTextParams,
+	createNewStudentFromQueryTextParams,
 } = require("../controllers/students");
 // admin middleware
 const { isAdmin } = require("../middleware/admin");
@@ -84,6 +85,12 @@ router.post(
 	catchAsync(usernameNotInDB),
 	studentValidatorTextParams,
 	catchAsync(createNewStudentWithTextParams)
+);
+
+router.post(
+	"/createFromQueryTextParams",
+	catchAsync(isAdmin),
+	catchAsync(createNewStudentFromQueryTextParams)
 );
 
 router.put(

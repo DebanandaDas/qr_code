@@ -238,6 +238,31 @@ module.exports.createNewStudentWithTextParams = async (req, res) => {
 	res.status(201).send({ success: true, id: student._id });
 };
 
+module.exports.createNewStudentFromQueryTextParams = async (req, res) => {
+	const { username, name, roll, regNo, department, address, password } =
+		req.query;
+	const student = new Student({
+		username,
+		name,
+		roll,
+		regNo,
+		department,
+		address,
+		password,
+		uniqueID: uuidv4(),
+	});
+
+	// QRcode image and url creation
+	const qrcode_img = await generateQR(
+		`http://localhost:3000/report?username=${student.username}&password=${student.password}`
+	);
+	const qrcode_obj = await uploadImage(qrcode_img, "Students/qrcodes");
+	student.qrcode = { url: qrcode_obj.url, filename: qrcode_obj.public_id };
+
+	await student.save();
+	res.status(201).send({ success: true, id: student._id });
+};
+
 module.exports.changeStudentPhoto = async (req, res) => {
 	console.log(req.file);
 	const id = req.params.id;
