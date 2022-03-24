@@ -94,7 +94,7 @@ router.post(
 );
 
 router.put(
-	"/putTextParams",
+	"/putTextParams/:id",
 	catchAsync(isAdmin),
 	upload.none(),
 	catchAsync(usernameNotInDB),
@@ -104,7 +104,7 @@ router.put(
 
 // PUT student photo (during creation & normal PUT)
 router.put(
-	"/putphoto/:id",
+	"/putphoto",
 	catchAsync(isAdmin),
 	upload.single("photo"),
 	fileValidator,

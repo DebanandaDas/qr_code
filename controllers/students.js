@@ -316,11 +316,7 @@ module.exports.changeGradeCard = async (req, res) => {
 			message: "Invalid sem Number",
 		});
 	}
-<<<<<<< HEAD
-	if (student.gradeCards[sem - 1] && student.gradeCards[sem - 1].filename) {
-=======
 	if (student.gradeCards[sem - 1] && student.gradeCards[sem - 1].filename ) {
->>>>>>> 2c4bd1a933998e6ed81e9fc296d32c11990b6255
 		deleteImage(student.gradeCards[sem - 1].filename);
 	}
 	student.gradeCards[sem - 1] = {
@@ -332,11 +328,18 @@ module.exports.changeGradeCard = async (req, res) => {
 };
 
 module.exports.updateStudentTextparameters = async (req, res) => {
-	const id = req.params.id;
-	// console.log(req.params.id);
+	const id= req.params.id;
+	console.log(req.params.id);
 	// console.log(req.body);
+	const department=req.body.department;
+	const name=req.body.name;
+	const regNo=req.body.regNo;
+	const roll=req.body.roll;
+	const address=req.body.address;
+	
 	const student = await Student.findByIdAndUpdate(id, {
-		...req.body.student,
+		department,name,regNo,roll,address
+		
 	});
 	await student.save();
 	res.send({ success: true });

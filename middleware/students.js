@@ -4,7 +4,7 @@
 const Student = require("../models/student");
 
 module.exports.usernameNotInDB = async (req, res, next) => {
-	const { username } = req.body.student;
+	const { username } = req.body.username;
 	const student = Student.find({ username });
 
 	if (student.length > 0) {
