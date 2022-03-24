@@ -4,6 +4,7 @@ const Student = require("../models/student");
 const { cloudinary, uploadImage, deleteImage } = require("../cloudinary");
 // QRcode generator
 const { generateQR } = require("../utils/qrcodes");
+const {mxFaceCompare}= require("../utils/mxFace");
 
 // uuid
 const { v4: uuidv4 } = require("uuid");
@@ -145,6 +146,7 @@ module.exports.deleteStudent = async (req, res) => {
 
 module.exports.verifyStudent = async (req, res) => {
 	const { username, password } = req.query;
+	const fcimage= req.body.b64image;
 	console.log(req.query);
 	// const { username, password } = req.body;
 	const student = await Student.findOne({ username });
@@ -160,28 +162,20 @@ module.exports.verifyStudent = async (req, res) => {
 			message: "Invalid password",
 		});
 	}
-	let fcimage = await axios.get(`${student.photo.url}`, {responseType: 'arraybuffer'});
-    let returnedB64 = Buffer.from(fcimage.data).toString('base64');
+	const fcCompRes= mxFaceCompare(student.photo.url,fcimage);
 	
-	let fcimage2 = await axios.get(`https://res.cloudinary.com/dlwe4ruhx/image/upload/v1645537203/Students/jhbqzunlguu1r6i8ixh2.jpg`, {responseType: 'arraybuffer'});
-    let returnedB642 = Buffer.from(fcimage2.data).toString('base64');
-
-	const fcres= await fetch(`https://faceapi.mxface.ai/api/face/verify`,{
-		method: 'POST',
-	headers: {
-		'subscriptionkey': 'vtnkH72bkXBjTFbF4380',
-		'Content-Type': 'application/json'
-	},
-	body: JSON.stringify({"encoded_image1":returnedB64,
-"encoded_image2":returnedB642}),
-	});
-	const fcdata= await fcres.json();
-	console.log(fcdata);
-	res.status(200).send({
+	
+	if(fcCompRes.confidence >0.90)
+	{
+	   return res.status(200).send({
 		success: true,
 		id: student._id,
 		message: "Student verified",
 	});
+}
+else{
+	return res.status(405).send({message:"Face is not matching"});
+}
 };
 
 module.exports.verifyStudentRegNo = async (req, res) => {
