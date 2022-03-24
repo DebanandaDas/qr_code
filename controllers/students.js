@@ -316,7 +316,11 @@ module.exports.changeGradeCard = async (req, res) => {
 			message: "Invalid sem Number",
 		});
 	}
+<<<<<<< HEAD
 	if (student.gradeCards[sem - 1] && student.gradeCards[sem - 1].filename) {
+=======
+	if (student.gradeCards[sem - 1] && student.gradeCards[sem - 1].filename ) {
+>>>>>>> 2c4bd1a933998e6ed81e9fc296d32c11990b6255
 		deleteImage(student.gradeCards[sem - 1].filename);
 	}
 	student.gradeCards[sem - 1] = {
