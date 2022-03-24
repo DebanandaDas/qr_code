@@ -104,7 +104,7 @@ router.put(
 
 // PUT student photo (during creation & normal PUT)
 router.put(
-	"/putphoto",
+	"/putphoto/:id",
 	catchAsync(isAdmin),
 	upload.single("photo"),
 	fileValidator,

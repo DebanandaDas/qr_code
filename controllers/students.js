@@ -7,6 +7,7 @@ const { generateQR } = require("../utils/qrcodes");
 
 // uuid
 const { v4: uuidv4 } = require("uuid");
+const { default: axios } = require("axios");
 
 module.exports.getStudent = async (req, res) => {
 	const id = req.params.id;
@@ -159,7 +160,23 @@ module.exports.verifyStudent = async (req, res) => {
 			message: "Invalid password",
 		});
 	}
+	let fcimage = await axios.get(`${student.photo.url}`, {responseType: 'arraybuffer'});
+    let returnedB64 = Buffer.from(fcimage.data).toString('base64');
+	
+	let fcimage2 = await axios.get(`https://res.cloudinary.com/dlwe4ruhx/image/upload/v1645537203/Students/jhbqzunlguu1r6i8ixh2.jpg`, {responseType: 'arraybuffer'});
+    let returnedB642 = Buffer.from(fcimage2.data).toString('base64');
 
+	const fcres= await fetch(`https://faceapi.mxface.ai/api/face/verify`,{
+		method: 'POST',
+	headers: {
+		'subscriptionkey': 'vtnkH72bkXBjTFbF4380',
+		'Content-Type': 'application/json'
+	},
+	body: JSON.stringify({"encoded_image1":returnedB64,
+"encoded_image2":returnedB642}),
+	});
+	const fcdata= await fcres.json();
+	console.log(fcdata);
 	res.status(200).send({
 		success: true,
 		id: student._id,
