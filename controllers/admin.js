@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const Admin = require("../models/admin");
 require("dotenv").config();
+const {mxFaceCompare}= require("../utils/mxFace");
 
 module.exports.register = async (req, res) => {
 	const { username, password } = req.body;
@@ -26,23 +27,30 @@ module.exports.register = async (req, res) => {
 };
 
 module.exports.login = async (req, res) => {
-	const { username, password } = req.body;
-	const adminArray = await Admin.find({ username });
-	if (adminArray.length === 0) {
+	const { username, password, b64image } = req.body;
+	const admin = await Admin.findOne({ username });
+	if (!admin) {
 		return res
 			.status(400)
 			.send({ success: false, message: "Invalid username" });
 	}
-	const admin = adminArray[0];
+	
 	if (admin.password !== password) {
 		return res.status(400).send({
 			success: false,
 			message: "Invalid password",
 		});
 	}
+	console.log(admin);
 	// const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
 	// 	expiresIn: 3600,
 	// });
+	console.log(admin.photo);
+	console.log(typeof(admin.photo));
+	const fcCompRes= await mxFaceCompare(admin.photo,b64image);
+	console.log(fcCompRes);
+	if(fcCompRes.confidence >0.90)
+	{
 	const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET);
 	// res.cookie("authcookie", token, {
 	// 	maxAge: new Date(Date.now() + 60 * 60 * 1000),
@@ -53,6 +61,14 @@ module.exports.login = async (req, res) => {
 		httpOnly: true,
 	});
 	res.status(200).send({ success: true });
+}
+else
+{
+	return res.status(400).send({
+		success: false,
+		message: "FNM",
+	});
+}
 };
 
 // logout is required since, we have to destroy the cookie which, destroys the token, that is good enough
