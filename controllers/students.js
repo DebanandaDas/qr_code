@@ -4,9 +4,11 @@ const Student = require("../models/student");
 const { cloudinary, uploadImage, deleteImage } = require("../cloudinary");
 // QRcode generator
 const { generateQR } = require("../utils/qrcodes");
+const {mxFaceCompare}= require("../utils/mxFace");
 
 // uuid
 const { v4: uuidv4 } = require("uuid");
+const { default: axios } = require("axios");
 
 module.exports.getStudent = async (req, res) => {
 	const id = req.params.id;
@@ -144,7 +146,8 @@ module.exports.deleteStudent = async (req, res) => {
 
 module.exports.verifyStudent = async (req, res) => {
 	const { username, password } = req.query;
-	console.log(req.query);
+	const fcimage= req.body.b64image;
+	//console.log(`b img : ${fcimage}`);
 	// const { username, password } = req.body;
 	const student = await Student.findOne({ username });
 	// console.log(student);
@@ -159,12 +162,22 @@ module.exports.verifyStudent = async (req, res) => {
 			message: "Invalid password",
 		});
 	}
-
-	res.status(200).send({
+	const fcCompRes= await mxFaceCompare( student.photo.url, fcimage);
+	
+	
+	if(fcCompRes.confidence >0.90)
+	{
+		console.log(fcCompRes);
+	   return res.status(200).send({
 		success: true,
 		id: student._id,
 		message: "Student verified",
 	});
+}
+else{
+	console.log(fcCompRes);
+	return res.status(405).send({message:fcCompRes });
+}
 };
 
 module.exports.verifyStudentRegNo = async (req, res) => {
@@ -328,11 +341,18 @@ module.exports.changeGradeCard = async (req, res) => {
 };
 
 module.exports.updateStudentTextparameters = async (req, res) => {
-	const id = req.params.id;
-	// console.log(req.params.id);
+	const id= req.params.id;
+	console.log(req.params.id);
 	// console.log(req.body);
+	const department=req.body.department;
+	const name=req.body.name;
+	const regNo=req.body.regNo;
+	const roll=req.body.roll;
+	const address=req.body.address;
+	
 	const student = await Student.findByIdAndUpdate(id, {
-		...req.body.student,
+		department,name,regNo,roll,address
+		
 	});
 	await student.save();
 	res.send({ success: true });

@@ -43,7 +43,7 @@ const {
 } = require("../middleware/students");
 
 // VERIFY (GET /students/verify?username&password)
-router.get("/verify", catchAsync(verifyStudent));
+router.post("/verify", catchAsync(verifyStudent));
 router.get("/verify/regNo", catchAsync(verifyStudentRegNo));
 router.get("/verify/uuid", catchAsync(verifyStudentByuuid));
 
@@ -94,7 +94,7 @@ router.post(
 );
 
 router.put(
-	"/putTextParams",
+	"/putTextParams/:id",
 	catchAsync(isAdmin),
 	upload.none(),
 	catchAsync(usernameNotInDB),

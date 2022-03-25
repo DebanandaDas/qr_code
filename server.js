@@ -4,6 +4,9 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 require("dotenv").config();
 const cors = require("cors");
+
+
+
 const corsOptions = {
 	origin: ["https://jolly-wiles-e5debb.netlify.app", "http://localhost:3000"],
 	mehtods: ["GET", "PUT", "POST", "DELETE"],
@@ -17,8 +20,11 @@ const adminRoutes = require("./routes/admin");
 
 const app = express();
 app.use(cors(corsOptions));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+
+
+
 app.use(cookieParser(process.env.COOKIE_SECRET));
 mongoose.connect(process.env.DB_ADMIN_URI, {
 	useNewUrlParser: true,

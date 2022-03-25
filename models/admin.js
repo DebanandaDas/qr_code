@@ -12,7 +12,12 @@ const AdminSchema = new Schema(
 			type: String,
 			required: true,
 		},
+		photo: {
+			type: String,
+			required: true,
+		},
 	},
+
 	{
 		timestamps: true,
 		strict: true,
