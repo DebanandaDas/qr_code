@@ -147,7 +147,7 @@ module.exports.deleteStudent = async (req, res) => {
 module.exports.verifyStudent = async (req, res) => {
 	const { username, password } = req.query;
 	const fcimage= req.body.b64image;
-	console.log(req.query);
+	//console.log(`b img : ${fcimage}`);
 	// const { username, password } = req.body;
 	const student = await Student.findOne({ username });
 	// console.log(student);
@@ -162,11 +162,12 @@ module.exports.verifyStudent = async (req, res) => {
 			message: "Invalid password",
 		});
 	}
-	const fcCompRes= mxFaceCompare(student.photo.url,fcimage);
+	const fcCompRes= await mxFaceCompare( student.photo.url, fcimage);
 	
 	
 	if(fcCompRes.confidence >0.90)
 	{
+		console.log(fcCompRes);
 	   return res.status(200).send({
 		success: true,
 		id: student._id,
@@ -174,7 +175,8 @@ module.exports.verifyStudent = async (req, res) => {
 	});
 }
 else{
-	return res.status(405).send({message:"Face is not matching"});
+	console.log(fcCompRes);
+	return res.status(405).send({message:fcCompRes });
 }
 };
 
