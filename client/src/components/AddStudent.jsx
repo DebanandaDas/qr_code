@@ -25,7 +25,7 @@ const AddStudent = () => {
     const fdata= new FormData();
     fdata.append('photo',Image);
     try{
-      const res= await fetch(`http://localhost:5000/students/putphoto/${id}`,{
+      const res= await fetch(`/students/putphoto/${id}`,{
         method: "PUT",
         credentials: 'include',
         
