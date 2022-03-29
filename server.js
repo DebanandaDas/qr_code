@@ -42,6 +42,11 @@ app.get("/", (req, res) => {
 });
 app.use("/students", studentRoutes);
 app.use("/admin", adminRoutes);
+if(process.env.NODE_ENV == "production")
+{
+    app.use(express.static("client/build"));
+     
+}
 app.listen(port, (err) => {
 	if (err) console.log(err);
 	else {

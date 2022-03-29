@@ -1,0 +1,6 @@
+.codes-row{
+    position:relative;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}

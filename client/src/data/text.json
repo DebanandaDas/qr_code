@@ -1,0 +1,20 @@
+{
+    "details":{
+        "18CS8068":{
+            "cgpa":"8.99",
+            "name":"Chilukuri Sri Harsha"
+        },
+        "18U10385":{
+            "cgpa":"9.25",
+            "name":"Vineeth"
+        }
+    },
+    "getRoll":{
+        "Randomknje218ubdoi327e9bd38":"18CS8068",
+        "Randomknje218ubdoifewferbd38":"18U10385"
+    },
+    "getSecret":{
+        "18CS8068":"Randomknje218ubdoi327e9bd38",
+        "18U10385":"Randomknje218ubdoifewferbd38"
+    }
+}

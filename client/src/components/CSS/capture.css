@@ -1,0 +1,21 @@
+.container{
+    width: 60%;
+
+}
+
+.cam-box{
+    width: 200px;
+    height:150px;
+}
+.auth-vid-container{
+    padding-left:13%;
+}
+
+@media (min-width:0px) and (max-width: 540px){
+    .container{
+        width: 85%;
+    }
+    .auth-vid-container{
+        padding-left:0%;
+    }
+}
