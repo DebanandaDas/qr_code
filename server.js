@@ -37,9 +37,7 @@ db.once("open", function () {
 });
 mongoose.set("debug", true);
 
-app.get("/", (req, res) => {
-	res.send("hello, world");
-});
+
 app.use("/students", studentRoutes);
 app.use("/admin", adminRoutes);
 if(process.env.NODE_ENV == "production")
