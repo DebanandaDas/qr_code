@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 require("dotenv").config();
 const cors = require("cors");
-
+const path = require("path");
 
 
 const corsOptions = {
@@ -23,7 +23,13 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
-
+app.get('/*', function(req, res) {
+	res.sendFile(path.join(__dirname, 'client/public/index.html'), function(err) {
+	  if (err) {
+		res.status(500).send(err)
+	  }
+	})
+  })
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 mongoose.connect(process.env.DB_ADMIN_URI, {
