@@ -6,8 +6,8 @@
 	"scripts": {
 		"devstart": "nodemon server",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "node server.js",
-		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "start": "node server.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
 	},
 	"author": "Vineeth Duvvuri",
 	"license": "ISC",
@@ -26,7 +26,6 @@
 		"mongoose": "^6.1.5",
 		"multer": "^1.4.4",
 		"multer-storage-cloudinary": "^4.0.0",
-		"path": "^0.12.7",
 		"qrcode": "^1.5.0",
 		"uuid": "^8.3.2"
 	},
