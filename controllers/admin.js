@@ -59,6 +59,8 @@ module.exports.login = async (req, res) => {
 	// });
 	res.cookie("authcookie", token, {
 		httpOnly: true,
+		sameSite: 'none', 
+		secure: true,
 	});
 	res.status(200).send({ success: true });
 }
