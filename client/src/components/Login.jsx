@@ -47,7 +47,7 @@ const Login = () => {
         }
       }
       /* 
-        const res = await fetch('http://localhost:5000/test', {
+        const res = await fetch('https://verify-nitdgp.herokuapp.com/test', {
             method:"POST",
             credentials: 'include',
             headers:{
