@@ -8,7 +8,7 @@ const cors = require("cors");
 
 
 const corsOptions = {
-	origin: ["https://jolly-wiles-e5debb.netlify.app", "http://localhost:3000"],
+	origin: ["https://jolly-wiles-e5debb.netlify.app", "http://localhost:3000","https://thunderous-marigold-86cc56.netlify.app"],
 	mehtods: ["GET", "PUT", "POST", "DELETE"],
 	allowedHeaders: ["Content-Type", "Authorization"],
 	credentials: true,
